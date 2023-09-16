@@ -70,7 +70,7 @@ void menu()
 
 void inicializar()
 {
-	// se a lista j� possuir elementos
+	// se a lista já possuir elementos
 // libera a memoria ocupada
 	NO* aux = primeiro;
 	while (aux != NULL) {
@@ -131,23 +131,88 @@ void inserirElemento()
 	}
 	else
 	{
-		// procura o final da lista
+		// Verifica se o elemento já existe na lista
 		NO* aux = primeiro;
-		while (aux->prox != NULL) {
+		NO* anterior = NULL;
+		while (aux != NULL)
+		{
+			if (aux->valor == novo->valor)
+			{
+				cout << "Este numero ja foi inserido na lista! \n";
+				free(novo); 
+				return;
+			}
+			anterior = aux;
 			aux = aux->prox;
 		}
-		aux->prox = novo;
+
+		// Inserir em ordem
+		aux = primeiro;
+		anterior = NULL;
+		while (aux != NULL && novo->valor > aux->valor)
+		{
+			anterior = aux;
+			aux = aux->prox;
+		}
+
+		if (anterior == NULL)
+		{
+			novo->prox = primeiro;
+			primeiro = novo;
+		}
+		else
+		{
+			novo->prox = anterior->prox;
+			anterior->prox = novo;
+		}
 	}
 }
 
 void excluirElemento()
 {
+	int deletado;
+	cout << "Digite o numero que deseja deletar: ";
+	cin >> deletado;
+	NO* aux = primeiro;
+	NO* ant = NULL;
 
+	while (aux != NULL && aux->valor < deletado) {
+		ant = aux;
+		aux = aux->prox;
+	}
+
+	if (aux != NULL && aux->valor == deletado) {
+		if (ant != NULL) {
+			ant->prox = aux->prox;
+		}
+		else {
+			primeiro = aux->prox;
+		}
+		free(aux);
+		cout << "Elemento deletado! \n";
+	}
+	else {
+		cout << "Elemento nao encontrado! \n";
+	}
 }
 
 void buscarElemento()
 {
+	int elemento;
+	cout << "Digite o elemento: ";
+	cin >> elemento;
+	NO* aux = primeiro;
 
+	while (aux != NULL && aux->valor < elemento) {
+		aux = aux->prox;
+	}
+
+	if (aux != NULL && aux->valor == elemento) {
+		cout << aux->valor << " encontrado \n";
+	}
+	else {
+		cout << "Elemento nao encontrado! \n";
+	}
 }
 
 
