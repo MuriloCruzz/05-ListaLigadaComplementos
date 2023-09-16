@@ -8,6 +8,7 @@ struct NO {
 };
 
 NO* primeiro = NULL;
+NO* ultimo = NULL;
 
 // headers
 void menu();
@@ -70,7 +71,7 @@ void menu()
 
 void inicializar()
 {
-	// se a lista j� possuir elementos
+	// se a lista já possuir elementos
 // libera a memoria ocupada
 	NO* aux = primeiro;
 	while (aux != NULL) {
@@ -125,29 +126,85 @@ void inserirElemento()
 	cin >> novo->valor;
 	novo->prox = NULL;
 
+	NO* repetido = posicaoElemento(novo->valor);
+	if (repetido != NULL) {
+		cout << "Este numero ja foi inserido! \n";
+		free(novo);
+		return;
+	}
+
 	if (primeiro == NULL)
 	{
 		primeiro = novo;
+		ultimo = novo;
 	}
 	else
 	{
-		// procura o final da lista
-		NO* aux = primeiro;
-		while (aux->prox != NULL) {
-			aux = aux->prox;
-		}
-		aux->prox = novo;
+		ultimo->prox = novo;
+		ultimo = novo;
 	}
 }
 
 void excluirElemento()
 {
+	int deletado;
+	cout << "Digite o numero que deseja deletar: ";
+	cin >> deletado;
+	NO* aux = primeiro;
+	NO* ant = NULL;
 
+	while (aux != NULL && aux->valor != deletado) {
+		ant = aux;
+		aux = aux->prox;
+	}
+	if (aux != NULL) {
+		if (ant != NULL) {
+			ant->prox = aux->prox;
+			free(aux);
+			cout << "Elemento deletado! \n";
+		}
+		else {
+			NO* prim = primeiro;
+			primeiro = primeiro->prox;
+			free(prim);
+			cout << "Elemento deletado! \n";
+		}
+	}
+	else {
+		cout << "Elemento nao encontrado! \n";
+	}
 }
 
 void buscarElemento()
 {
-
+	int elemento;
+	cout << "Digite o elemento: ";
+	cin >> elemento;
+	NO* aux = primeiro;
+	while (aux != NULL) {
+		if (aux->valor == elemento) {
+			cout << aux->valor << " encontrado \n";
+			break;
+		}
+		aux = aux->prox;
+	}
+	if (aux == NULL) {
+		cout << "Elemento nao encontrado! \n";
+	}
 }
 
 
+// retorna um ponteiro para o elemento buscado
+// ou NULL se o elemento não estiver na lista
+NO* posicaoElemento(int numero)
+{
+	NO* aux = primeiro;
+	while (aux != NULL) {
+		if (aux->valor == numero)
+		{
+			break;
+		}
+		aux = aux->prox;
+	}
+	return aux;
+}
